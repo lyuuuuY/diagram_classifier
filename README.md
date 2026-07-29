@@ -152,7 +152,6 @@ the project was developed and tested with Python 3.11.8.
 Create a virtual environment:
 
 ```powershell
-cd E:\Programe__AA\classifier
 py -3.11 -m venv .venv
 ```
 
