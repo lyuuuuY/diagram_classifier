@@ -36,14 +36,14 @@ py -3.11 -m venv .venv
 Install the CPU dependencies on a computer without an NVIDIA GPU:
 
 ```powershell
-python -m pip install -r requirements-cpu.txt
+python -m pip install -r requirements_cpu.txt
 ```
 
 Alternatively, install the CUDA 12.8 dependencies on a computer with a
 compatible NVIDIA GPU:
 
 ```powershell
-python -m pip install -r requirements-cu128.txt
+python -m pip install -r requirements_cu128.txt
 ```
 
 
