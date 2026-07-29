@@ -12,23 +12,70 @@ than 500 training images. The project includes synthetic data generation, image
 processing, hyperparameter search, final model training, test visualization, a
 command-line classification function, and a local web interface.
 
-## Required Classification Interface
+## Installation and Usage
 
-The interface is defined in `classifier.py`:
+The trained model is included through Git LFS. Users do not need to run
+hyperparameter search or train the model again.
 
-```python
-from classifier import classify
+Clone the repository and download the trained checkpoint:
 
-label = classify(r"path\to\image.png")
-print(label)
+```powershell
+git lfs install
+git clone https://github.com/lyuuuuY/diagram_classifier.git
+cd diagram_classifier
+git lfs pull
 ```
 
-`The return value is exactly one of:
+Create and activate a Python 3.11 virtual environment:
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Install the CPU dependencies on a computer without an NVIDIA GPU:
+
+```powershell
+python -m pip install -r requirements-cpu.txt
+```
+
+Alternatively, install the CUDA 12.8 dependencies on a computer with a
+compatible NVIDIA GPU:
+
+```powershell
+python -m pip install -r requirements-cu128.txt
+```
+
+
+### Classify an Image
+
+The direct `classify()` interface requires a 224×224 PNG:
+
+```powershell
+python -c "from classifier import classify; print(classify(r'path\to\image.png'))"
+```
+
+The output is one of:
 
 ```text
 lewis
 graph
 equation
+```
+
+### Use the Web Interface
+
+The web interface accepts PNG images of any dimensions and automatically
+resizes and pads them to 224×224:
+
+```powershell
+python app.py
+```
+
+Open the following address in a browser:
+
+```text
+http://127.0.0.1:5000/
 ```
 
 ## Model and Training Strategy
@@ -137,84 +184,7 @@ Development and validation environment:
 | NumPy | 2.4.6 |
 | Pillow | 12.3.0 |
 
-The dependency files are separated by compute platform:
 
-- `requirements.txt` contains the common dependencies shared by all systems.
-- `requirements-cpu.txt` installs the CPU build of PyTorch and TorchVision.
-- `requirements-cu128.txt` installs the CUDA 12.8 builds used in the original
-  development and training environment.
-
-## Installation
-
-The commands below use Windows PowerShell. Python 3.11 is recommended because
-the project was developed and tested with Python 3.11.8.
-
-Create a virtual environment:
-
-```powershell
-py -3.11 -m venv .venv
-```
-
-Activate it:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-For a computer without an NVIDIA GPU, install the CPU dependencies:
-
-```powershell
-python -m pip install -r requirements-cpu.txt
-```
-
-For a computer with a compatible NVIDIA GPU, install the CUDA 12.8
-dependencies:
-
-```powershell
-python -m pip install -r requirements-cu128.txt
-```
-
-To install only the common dependencies, without installing PyTorch or
-TorchVision:
-
-```powershell
-python -m pip install -r requirements.txt
-```
-
-Only one of `requirements-cpu.txt` or `requirements-cu128.txt` should be used
-for a given virtual environment.
-```
-
-This repository uses Git LFS to track the trained model checkpoint. After
-cloning the repository, install Git LFS and download the model:
-
-```powershell
-git lfs install
-git lfs pull
-```
-
-
-## Local Web Interface
-
-Start Flask:
-
-```powershell
-.\.venv\Scripts\python.exe app.py
-```
-
-The page accepts a PNG of any dimensions through drag-and-drop or file upload.
-The backend:
-
-1. Resizes the image while preserving its aspect ratio.
-2. Estimates the background color from the four corners.
-3. Centers and pads the result to `224 × 224`.
-4. Calls `classifier.classify()`.
-
-Upload limits:
-
-- PNG only
-- Smaller than 5 MB
-- No more than 50 million source pixels
 
 
 
