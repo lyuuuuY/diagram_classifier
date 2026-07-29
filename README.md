@@ -185,7 +185,19 @@ Development and validation environment:
 | Pillow | 12.3.0 |
 
 
+## Model Limitations
 
+The training data is relatively simple: most images contain one Lewis
+structure, one equation, or a connected graph made of basic nodes and edges.
+Therefore, the model performs well on test images with similar styles.
+
+Performance decreases on the new-scope dataset. Colored 3D molecules may be
+classified as graphs because atoms and bonds resemble nodes and edges. Lewis
+structures with dark backgrounds or multiple structures may be classified as
+equations because their layout resembles mathematical notation. Some incorrect
+predictions also have high confidence, showing that the model is less reliable
+on unfamiliar image styles. A more diverse training set would improve
+generalization.
 
 
 
