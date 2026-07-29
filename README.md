@@ -6,7 +6,7 @@ A three-class image classifier built with Python and PyTorch. It recognizes:
 - `graph`: connected graph diagrams
 - `equation`: calculus equations
 
-Inputs may be handwritten, scanned from textbooks, or computer-generated. The
+Inputs may be handwritten, screenshot from webpage, or computer-generated. The
 model uses an ImageNet-pretrained ResNet18 and transfer learning with no more
 than 500 training images. The project includes synthetic data generation, image
 processing, hyperparameter search, final model training, test visualization, a
