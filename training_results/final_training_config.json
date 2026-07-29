@@ -1,0 +1,17 @@
+{
+  "hyperparameters": {
+    "head_learning_rate": 0.001,
+    "finetune_learning_rate": 3e-05,
+    "weight_decay": 0.001,
+    "dropout": 0.5
+  },
+  "seed": 17,
+  "head_epochs": 10,
+  "finetune_epochs": 15,
+  "early_stopping": false,
+  "batch_size": 16,
+  "num_workers": 4,
+  "device": "cuda",
+  "data_dir": "E:\\Programe__AA\\classifier\\merged_data",
+  "model_path": "E:\\Programe__AA\\classifier\\models\\best_model.pth"
+}

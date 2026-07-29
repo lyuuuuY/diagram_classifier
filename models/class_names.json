@@ -1,0 +1,12 @@
+{
+  "class_names": [
+    "equation",
+    "graph",
+    "lewis"
+  ],
+  "class_to_idx": {
+    "equation": 0,
+    "graph": 1,
+    "lewis": 2
+  }
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Classify Lewis structures, connected graphs, and calculus equations."
+    >
+    <title>Diagram Classifier</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    >
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Diagram Classifier home">
+          <span class="brand-mark" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </span>
+          <span>Diagram Classifier</span>
+        </a>
+        <div class="server-state" id="serverState">
+          <span class="state-dot"></span>
+          <span>Checking localhost</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="pageTitle">
+          <p class="eyebrow">THREE-CLASS VISION MODEL</p>
+          <h1 id="pageTitle">
+            Drop in a diagram.<br>
+            <span>Get its class.</span>
+          </h1>
+          <p class="intro-copy">
+            Upload a PNG of any size and the local ResNet18 model will identify
+            it as a Lewis structure, connected graph, or calculus equation.
+            Images are fitted to 224×224 automatically.
+          </p>
+          <div class="class-list" aria-label="Supported classes">
+            <span><b>∫</b> Equation</span>
+            <span><b>⌬</b> Graph</span>
+            <span><b>H—O</b> Lewis</span>
+          </div>
+        </section>
+
+        <section class="classifier-panel" aria-label="Image classifier">
+          <div
+            class="drop-zone"
+            id="dropZone"
+            tabindex="0"
+            role="button"
+            aria-label="Drop a PNG here or choose a file"
+          >
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/png,.png"
+              hidden
+            >
+            <div class="empty-state" id="emptyState">
+              <div class="upload-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" role="img">
+                  <path d="M24 33V12m0 0-8 8m8-8 8 8"></path>
+                  <path d="M11 30v7h26v-7"></path>
+                </svg>
+              </div>
+              <h2>Drop your PNG here</h2>
+              <p>or click anywhere in this box to browse</p>
+              <span class="file-rule">PNG · ANY SIZE · MAX 5 MB</span>
+            </div>
+
+            <div class="preview-state" id="previewState" hidden>
+              <img id="previewImage" alt="Selected diagram preview">
+              <div class="preview-meta">
+                <strong id="fileName"></strong>
+                <span id="fileDetails"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="message" id="message" role="status" aria-live="polite">
+          </div>
+
+          <div class="actions">
+            <button class="secondary-button" id="clearButton" disabled>
+              Clear
+            </button>
+            <button class="primary-button" id="classifyButton" disabled>
+              <span class="button-label">Classify image</span>
+              <span class="button-loader" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <section class="result-card" id="resultCard" hidden aria-live="polite">
+            <div class="result-heading">
+              <span>MODEL PREDICTION</span>
+              <span class="local-badge">LOCAL</span>
+            </div>
+            <div class="result-main">
+              <div class="result-symbol" id="resultSymbol" aria-hidden="true">
+              </div>
+              <div>
+                <p>Classified as</p>
+                <h2 id="resultLabel"></h2>
+              </div>
+            </div>
+            <p class="result-note">
+              Processed locally by your trained best_model.pth checkpoint.
+            </p>
+          </section>
+        </section>
+      </main>
+
+      <footer>
+        <span>ResNet18 · PyTorch · Flask</span>
+        <span>Your upload is removed immediately after classification.</span>
+      </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
