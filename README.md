@@ -105,14 +105,14 @@ Hyperparameter search and final training are separated:
 ## Current Dataset
 
 The source datasets were initially shuffled and split independently using an
-8:1:1 ratio. After adding several broader-scope Lewis examples, the current
-standard dataset contains:
+8:1:1 ratio. After reviewing and removing images that were not genuine Lewis
+structures, the current standard dataset contains:
 
 | Split | Equation | Graph | Lewis | Total |
 |---|---:|---:|---:|---:|
-| Training | 141 | 167 | 156 | 464 |
-| Validation | 18 | 22 | 20 | 60 |
-| Testing | 18 | 20 | 22 | 60 |
+| Training | 141 | 167 | 153 | 461 |
+| Validation | 18 | 22 | 19 | 59 |
+| Testing | 18 | 20 | 19 | 57 |
 
 An additional 34 images are stored in `merged_data/testing_new_scope` to
 measure generalization to new visual styles. These images differ substantially from the training data: 
@@ -192,15 +192,15 @@ The training data is relatively simple: most images contain one Lewis
 structure, one equation, or a connected graph made of basic nodes and edges.
 Therefore, the model performs well on test images with similar styles.
 
-The current checkpoint classifies 59 of 60 standard testing images correctly
-(98.3% accuracy and 0.984 macro F1). On the new-scope dataset, it classifies 31
-of 34 images correctly (91.2% accuracy and 0.908 macro F1).
+The current checkpoint classifies all 57 standard testing images correctly
+(100% accuracy and 1.000 macro F1). On the new-scope dataset, it classifies 32
+of 34 images correctly (94.1% accuracy and 0.935 macro F1).
 
-The remaining errors show that dense graphs with many crossing edges may
-resemble Lewis structures, while molecular drawings with multiple structures
-or annotations may resemble equations or graphs. Some incorrect predictions
-also have high confidence, showing that the model is less reliable on
-unfamiliar layouts. A more diverse training set would improve generalization.
+The two remaining errors are Lewis-labelled new-scope images. A stylized
+molecular drawing is classified as a graph, while an image containing multiple
+structures and annotations is classified as an equation with high confidence.
+This shows that the model is less reliable on unfamiliar or complex layouts. A
+more diverse training set would improve generalization.
 
 
 
