@@ -104,6 +104,14 @@ Hyperparameter search and final training are separated:
 
 ## Current Dataset
 
+The Lewis dataset combines structures rendered from randomly selected formulas
+using the [Lewis Structure Generator](https://lewisstructuregenerator.org/?formula=CH3OH#formula-input),
+hand-drawn samples, and images generated with Python. The connected-graph and
+calculus-equation datasets likewise combine Python-generated and hand-drawn
+images. Because much of the data comes from a limited number of generators and
+drawing procedures, images within each class may have relatively similar
+visual styles.
+
 The source datasets were initially shuffled and split independently using an
 8:1:1 ratio. After reviewing and removing images that were not genuine Lewis
 structures, the current standard dataset contains:
