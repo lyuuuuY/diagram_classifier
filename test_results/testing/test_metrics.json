@@ -1,25 +1,25 @@
 {
-  "sample_count": 57,
-  "correct_count": 57,
-  "error_count": 0,
-  "accuracy": 1.0,
-  "macro_precision": 1.0,
-  "macro_recall": 1.0,
-  "macro_f1": 1.0,
+  "sample_count": 60,
+  "correct_count": 59,
+  "error_count": 1,
+  "accuracy": 0.9833333333333333,
+  "macro_precision": 0.9841269841269841,
+  "macro_recall": 0.9848484848484849,
+  "macro_f1": 0.9841179807146909,
   "per_class_precision": [
     1.0,
-    1.0,
+    0.9523809523809523,
     1.0
   ],
   "per_class_recall": [
     1.0,
     1.0,
-    1.0
+    0.9545454545454546
   ],
   "per_class_f1": [
     1.0,
-    1.0,
-    1.0
+    0.975609756097561,
+    0.9767441860465117
   ],
   "confusion_matrix": [
     [
@@ -34,9 +34,9 @@
     ],
     [
       0,
-      0,
-      19
+      1,
+      21
     ]
   ],
-  "loss": 0.012150879638890425
+  "loss": 0.033750155071417494
 }

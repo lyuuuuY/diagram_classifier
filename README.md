@@ -104,14 +104,15 @@ Hyperparameter search and final training are separated:
 
 ## Current Dataset
 
-Each source is shuffled and split independently using an 8:1:1 ratio. The
-current standard dataset contains:
+The source datasets were initially shuffled and split independently using an
+8:1:1 ratio. After adding several broader-scope Lewis examples, the current
+standard dataset contains:
 
 | Split | Equation | Graph | Lewis | Total |
 |---|---:|---:|---:|---:|
-| Training | 141 | 167 | 152 | 460 |
-| Validation | 18 | 22 | 19 | 59 |
-| Testing | 18 | 20 | 19 | 57 |
+| Training | 141 | 167 | 156 | 464 |
+| Validation | 18 | 22 | 20 | 60 |
+| Testing | 18 | 20 | 22 | 60 |
 
 An additional 34 images are stored in `merged_data/testing_new_scope` to
 measure generalization to new visual styles. These images differ substantially from the training data: 
@@ -191,13 +192,15 @@ The training data is relatively simple: most images contain one Lewis
 structure, one equation, or a connected graph made of basic nodes and edges.
 Therefore, the model performs well on test images with similar styles.
 
-Performance decreases on the new-scope dataset. Colored 3D molecules may be
-classified as graphs because atoms and bonds resemble nodes and edges. Lewis
-structures with dark backgrounds or multiple structures may be classified as
-equations because their layout resembles mathematical notation. Some incorrect
-predictions also have high confidence, showing that the model is less reliable
-on unfamiliar image styles. A more diverse training set would improve
-generalization.
+The current checkpoint classifies 59 of 60 standard testing images correctly
+(98.3% accuracy and 0.984 macro F1). On the new-scope dataset, it classifies 31
+of 34 images correctly (91.2% accuracy and 0.908 macro F1).
+
+The remaining errors show that dense graphs with many crossing edges may
+resemble Lewis structures, while molecular drawings with multiple structures
+or annotations may resemble equations or graphs. Some incorrect predictions
+also have high confidence, showing that the model is less reliable on
+unfamiliar layouts. A more diverse training set would improve generalization.
 
 
 

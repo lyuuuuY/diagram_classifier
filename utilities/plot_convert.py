@@ -6,8 +6,7 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 
-DEFAULT_INPUT_DIR = "merged_data/testing_new_scope"
-DEFAULT_OUTPUT_DIR = "merged_data/testing_new_scope2"
+DEFAULT_INPUT_DIR = "merged_data"
 OUTPUT_SIZE = 224
 
 
@@ -237,9 +236,86 @@ def convert_directory(
     return output_paths
 
 
+def _is_conforming_png(path: Path, *, size: int) -> bool:
+    """Return whether a PNG is already an RGB square of the requested size."""
+    with Image.open(path) as image:
+        return (
+            image.format == "PNG"
+            and image.size == (size, size)
+            and image.mode == "RGB"
+        )
+
+
+def convert_nonconforming_in_place(
+    input_dir: str | Path,
+    *,
+    size: int = OUTPUT_SIZE,
+    margin: int = 10,
+    auto_crop: bool = True,
+    remove_annotations: bool = True,
+    recursive: bool = True,
+) -> list[Path]:
+    """Find non-conforming PNGs and overwrite them with converted images.
+
+    Existing RGB PNGs of the requested size are left untouched. Images that
+    need conversion are resized without changing their aspect ratio, centered
+    on a square background, converted to RGB, and saved back to the same path.
+    """
+    source_dir = Path(input_dir)
+    if not source_dir.is_dir():
+        raise NotADirectoryError(
+            f"Input directory does not exist: {source_dir}"
+        )
+
+    candidates = (
+        source_dir.rglob("*.png")
+        if recursive
+        else source_dir.glob("*.png")
+    )
+    source_paths = sorted(
+        (path for path in candidates if path.is_file()),
+        key=lambda path: str(path).lower(),
+    )
+    if not source_paths:
+        raise FileNotFoundError(f"No PNG files found in: {source_dir}")
+
+    paths_to_convert = [
+        path
+        for path in source_paths
+        if not _is_conforming_png(path, size=size)
+    ]
+    if not paths_to_convert:
+        print(
+            f"All {len(source_paths)} PNG files already conform to "
+            f"{size}x{size} RGB."
+        )
+        return []
+
+    converted_paths: list[Path] = []
+    for index, source_path in enumerate(paths_to_convert, start=1):
+        convert_image(
+            source_path,
+            source_path,
+            size=size,
+            margin=margin,
+            auto_crop=auto_crop,
+            remove_annotations=remove_annotations,
+        )
+        converted_paths.append(source_path)
+        print(
+            f"[{index}/{len(paths_to_convert)}] Overwrote "
+            f"{source_path}"
+        )
+
+    return converted_paths
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Convert every PNG in a directory to square RGB PNG files."
+        description=(
+            "Convert PNG files to square RGB images. By default, recursively "
+            "find non-conforming images under merged_data and overwrite them."
+        )
     )
     parser.add_argument(
         "--input-dir",
@@ -250,8 +326,11 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=DEFAULT_OUTPUT_DIR,
-        help=f"destination directory (default: {DEFAULT_OUTPUT_DIR})",
+        default=None,
+        help=(
+            "optional separate destination directory; when omitted, only "
+            "non-conforming files are converted in place"
+        ),
     )
     parser.add_argument(
         "--size",
@@ -275,23 +354,42 @@ def _parse_args() -> argparse.Namespace:
         action="store_true",
         help="keep the explanatory text below each Lewis structure",
     )
+    parser.add_argument(
+        "--non-recursive",
+        action="store_true",
+        help="when converting in place, inspect only the input directory itself",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = _parse_args()
-    output_paths = convert_directory(
-        args.input_dir,
-        args.output_dir,
-        size=args.size,
-        margin=args.margin,
-        auto_crop=not args.keep_full_image,
-        remove_annotations=not args.keep_annotations,
-    )
-    print(
-        f"Converted {len(output_paths)} PNG files to "
-        f"{args.size}x{args.size} RGB images in {args.output_dir}"
-    )
+    common_options = {
+        "size": args.size,
+        "margin": args.margin,
+        "auto_crop": not args.keep_full_image,
+        "remove_annotations": not args.keep_annotations,
+    }
+    if args.output_dir is None:
+        output_paths = convert_nonconforming_in_place(
+            args.input_dir,
+            recursive=not args.non_recursive,
+            **common_options,
+        )
+        print(
+            f"Converted and overwrote {len(output_paths)} non-conforming "
+            f"PNG files as {args.size}x{args.size} RGB images."
+        )
+    else:
+        output_paths = convert_directory(
+            args.input_dir,
+            args.output_dir,
+            **common_options,
+        )
+        print(
+            f"Converted {len(output_paths)} PNG files to "
+            f"{args.size}x{args.size} RGB images in {args.output_dir}"
+        )
 
 
 if __name__ == "__main__":

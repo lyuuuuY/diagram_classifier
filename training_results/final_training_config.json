@@ -1,13 +1,13 @@
 {
   "hyperparameters": {
-    "head_learning_rate": 0.001,
+    "head_learning_rate": 0.0003,
     "finetune_learning_rate": 3e-05,
     "weight_decay": 0.001,
     "dropout": 0.5
   },
   "seed": 17,
   "head_epochs": 10,
-  "finetune_epochs": 15,
+  "finetune_epochs": 14,
   "early_stopping": false,
   "batch_size": 16,
   "num_workers": 4,
